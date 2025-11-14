@@ -1,16 +1,41 @@
 {
-  "root": true,
-  "extends": [
-    "next/core-web-vitals",
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:react-hooks/recommended",
-    "plugin:import/errors",
-    "plugin:import/warnings",
-    "plugin:prettier/recommended"
-  ],
-  "plugins": ["react", "react-hooks", "import"],
+  "env": {
+    "browser": true,
+    "es6": true,
+    "jest": true
+  },
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "requireConfigFile": false,
+    "babelOptions": {
+      "presets": ["@babel/preset-react"]
+    },
+    "ecmaVersion": 2018,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "extends": ["airbnb-base"],
+  "plugins": ["react"],
+  "settings": {
+    "react": {
+      "version": "detect"
+    },
+    "import/resolver": {
+      "alias": {
+        "map": ["@", "./"],
+        "extensions": [".js", ".jsx", ".ts", ".tsx", ".json"]
+      },
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx", ".json"],
+        "moduleDirectory": ["node_modules", "."]
+      }
+    }
+  },
   "rules": {
+    "react/jsx-uses-vars": "error",
+    // "react/jsx-uses-react": "error",
     "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
     "no-redeclare": "error",
     "no-dupe-keys": "error",
@@ -18,25 +43,9 @@
     "import/no-duplicates": "error",
     "react/react-in-jsx-scope": "off"
   },
-  "settings": {
-    "react": { "version": "detect" }
-  },
-  "overrides": [
-    {
-      "files": ["*.ts", "*.tsx"],
-      // ...ensure you install @typescript-eslint/parser and plugin if using TS
-      "parser": "@typescript-eslint/parser",
-      "plugins": ["@typescript-eslint"],
-      "extends": ["plugin:@typescript-eslint/recommended"],
-      "rules": {
-        "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
-        "@typescript-eslint/no-redeclare": "error"
-      }
-    }
-  ],
   "ignorePatterns": [
-    "next",
     "dist/",
-    "build/"
+    "build/",
+    "next/"
   ]
 }

@@ -1,0 +1,64 @@
+name: Next.js Linters
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: nextjs-linters-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  eslint:
+    name: ESLint
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+      - name: Setup ESLint
+        run: |
+          npm install --save-dev eslint@7.x eslint-config-airbnb@18.x eslint-plugin-import@2.x eslint-plugin-jsx-a11y@6.x eslint-plugin-react@7.x eslint-plugin-react-hooks@4.x @babel/eslint-parser@7.x @babel/core@7.x  @babel/plugin-syntax-jsx@7.x @babel/preset-env@7.x  @babel/preset-react@7.x
+          [ -f .eslintrc.json ] || wget https://raw.githubusercontent.com/IFBC-PROJECT/linters-config/main/javascript-react-projects/.eslintrc.json
+          [ -f .babelrc ] || wget https://raw.githubusercontent.com/IFBC-PROJECT/linters-config/main/javascript-react-projects/.babelrc
+      - name: ESLint Report
+        run: npx eslint "**/*.{js,jsx}"
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: Run linters in Next.js projects
+        env:
+          CI: true
+        run: |
+          set -euo pipefail
+          echo "Searching for Next.js projects..."
+          # find directories that contain a package.json
+          for dir in $(git ls-files -z -- '**/package.json' | xargs -0 -n1 dirname | sort -u); do
+            if grep -q '"next"' "$dir/package.json" || grep -q '"next@"' "$dir/package.json"; then
+              echo "====> Detected Next.js project: $dir"
+              pushd "$dir" >/dev/null
+              echo "Installing dependencies for $dir"
+              npm ci --prefer-offline --no-audit --progress=false
+              # Prefer project lint script, fallback to eslint directly
+              if npm run | grep -q " lint"; then
+                echo "Running npm run lint in $dir"
+                npm run lint --if-present
+              else
+                echo "No lint script found, running ESLint directly in $dir"
+                npx eslint . --ext .js,.jsx,.ts,.tsx --max-warnings=0
+              fi
+              popd >/dev/null
+            else
+              echo "Skipping $dir (not a Next.js project)"
+            fi
+          done

@@ -16,7 +16,7 @@
       "jsx": true
     }
   },
-  "extends": ["airbnb-base"],
+  "extends": ["airbnb", "plugin:react/recommended", "plugin:react-hooks/recommended"],
   "plugins": ["react"],
   "settings": {
     "react": {
@@ -39,13 +39,40 @@
     "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
     "no-redeclare": "error",
     "no-dupe-keys": "error",
+    "react/jsx-filename-extension": ["warn", { "extensions": [".js", ".jsx"] }],
     "no-duplicate-imports": "error",
     "import/no-duplicates": "error",
-    "react/react-in-jsx-scope": "off"
+    "react/react-in-jsx-scope": "off",
+    "import/no-unresolved": "off",
+    "import/prefer-default-export": "off",
+    "import/extensions": "off",
+    "import/no-extraneous-dependencies": "off",
+    "react/prop-types": "off",
+    "react/jsx-props-no-spreading": "off",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "no-useless-escapes": "off",
+    "camelcase": "off",
+    "jsx-a11y/label-has-associated-control": "off",
+    "react/no-unknown-property": "off",
+    "jsx-a11y/no-static-element-interactions": "off",
+    "jsx-a11y/media-has-caption": "off",
+    "jsx-a11y/no-noninteractive-element-to-interactive-role": "off",
+    "max-len": "off",
+    "react/no-array-index-key": "off",
+    "consistent-return": "off",
+    "jsx-a11y/no-autofocus": "off",
+    "no-tabs": "off",
+    "jsx-a11y/control-has-associated-label": "off",
+    "jsx-a11y/no-noninteractive-element-interactions": "off",
+    "no-mixed-spaces-and-tabs": "off",
+    "jsx-a11y/anchor-is-valid": "off",
+    "react/jsx-pascal-case": "off",
+    "no-alert": "error"
   },
   "ignorePatterns": [
     "dist/",
     "build/",
-    "next/"
+    ".next/*",
+    "node_modules/*"
   ]
 }
